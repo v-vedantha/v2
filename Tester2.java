@@ -122,8 +122,8 @@ public class Tester2 {
         for (int i = 0; i < numWorkers; i++) {
           dispatcherQs[i] = new MultiQ();
         }
-        MultiQ[] CacheQs = new MultiQ[1];
-        for (int i = 0; i < CacheQs.length; i++) {
+        MultiQ[] CacheQs = new MultiQ[numWorkers];
+        for (int i = 0; i < numWorkers; i++) {
           CacheQs[i] = new MultiQ();
         }
         MultiQ[] PNGQs = new MultiQ[numWorkers];
@@ -143,7 +143,7 @@ public class Tester2 {
                 meanWindow, meanCommsPerAddress, meanWork, configFraction, pngFraction, acceptingFraction);
         // Dependong on tableType do something different
         AllData p = new AllData();
-        Runnable[] runnables = new Runnable[numWorkers*3+1];
+        Runnable[] runnables = new Runnable[numWorkers*4];
         PaddedPrimitiveNonVolatile<Boolean> done = new PaddedPrimitiveNonVolatile<Boolean>(false);
         for (int i = 0; i < dispatcherQs.length; ++i){
             runnables[i] = new BetterDispatcher(dispatcherQs[i], p, CacheQs, done);
@@ -159,7 +159,7 @@ public class Tester2 {
         }
         BetterMainDispatcher d= new BetterMainDispatcher(dispatcherQs, source, done);
 
-        Thread[] threads = new Thread[numWorkers*3+1];
+        Thread[] threads = new Thread[numWorkers*4];
         for (int i = 0; i < runnables.length; i++) {
           Thread t = new Thread(runnables[i]);
           threads[i] = t;
