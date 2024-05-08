@@ -92,19 +92,6 @@ public class BetterPacketProcessor extends PacketProcessor {
                 s.remove(new T(i));
             }
         }
-        // // Continue emptying it out while validating
-        // boolean succeed = false;
-        // while (!succeed) {
-        //     succeed = true;
-        //     this.cache.invalidateSource(config.address);
-        //     this.cache.invalidateRange(config.addressBegin, config.addressEnd, config.address);
-        //     if (!cache.validateRange(config.addressBegin, config.addressEnd, config.address)) {
-        //         continue;
-        //     }
-        //     if (!cache.validateSource(config.address)) {
-        //         continue;
-        //     }
-        // }
 
         unlockDest(config.address);
         unlockSource(config.address);
@@ -113,9 +100,9 @@ public class BetterPacketProcessor extends PacketProcessor {
         Boolean[] isInCache = {false};
         CacheEntry res = cache.lookup(header.source, header.dest, isInCache);
         if (isInCache[0]) {
-            System.out.println("Cache find");
+            // System.out.println("Cache find");
             if (res.ts >= ts.get(header.source % 256) && res.ts >= ts.get(header.dest % 256)) {
-                System.out.println("Cache hit");
+                // System.out.println("Cache hit");
                 if (res.isAllowed == true) {
                     this.hist.add(Fingerprint.getFingerprint(body.iterations,body.seed));
                 }

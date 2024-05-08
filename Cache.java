@@ -27,10 +27,8 @@ public class Cache {
         int index = hashMod(source, dest, cache.length());
         CacheEntry e = cache.get(index);
 
-        // if (e != null) {
-        //     System.out.println("Currently seeing " + e.source + " " + e.dest +  " for " + source + " " + dest + " " + index + " " + cache.length());
-        // }
-        if (e != null && e.source == source && e.dest == dest) {
+        if (e != null && e.source.equals(source) && e.dest.equals(dest)) {
+            // System.out.println("all good");
             isCached[0] = true;
             return e;
         }

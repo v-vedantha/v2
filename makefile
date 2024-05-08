@@ -24,7 +24,10 @@ Fingerprint.java \
 PacketGenerator.java \
 	               Worker.java \
 PacketProcessor.java \
-	               SerialHistogram.java
+	               SerialHistogram.java \
+				   CacheProcessor.java \
+				   PNGProcessor.java \
+				   RProcessor.java 
 
 
 default: classes
