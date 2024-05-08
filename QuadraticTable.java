@@ -27,14 +27,14 @@ public class QuadraticTable {
     public QuadraticTable(int capacity) {
         size = new AtomicInteger(0);
 
-        table = new AtomicReferenceArray<Entry>(capacity);
+        table = new AtomicReferenceArray<Entry>(capacity*256);
         locks = new ReadWriteLock[capacity];
         baselocks = new ReadWriteLock[capacity];
         for (int i = 0; i < capacity; i++) {
             locks[i] = new ReentrantReadWriteLock();
             baselocks[i] = new ReentrantReadWriteLock();
         }
-        for (int i = 0; i < capacity; i++) {
+        for (int i = 0; i < table.length(); i++) {
             table.set(i, new Entry(null, 0, new SkipList()));
         }
     }
