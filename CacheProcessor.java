@@ -9,9 +9,9 @@ public class CacheProcessor {
         Boolean[] isInCache = {false};
         CacheEntry res = data.cache.lookup(header.source, header.dest, isInCache);
         if (isInCache[0]) {
-            System.out.println("Cache find");
+            // System.out.println("Cache find");
             if (res.ts >= data.ts.get(header.source % 256) && res.ts >= data.ts.get(header.dest % 256)) {
-                System.out.println("Cache hit");
+                // System.out.println("Cache hit");
                 if (res.isAllowed == true) {
                     isAllowed[0] = true;
                 } else {

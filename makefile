@@ -27,7 +27,14 @@ PacketProcessor.java \
 	               SerialHistogram.java \
 				   CacheProcessor.java \
 				   PNGProcessor.java \
-				   RProcessor.java 
+				   RProcessor.java  \
+				   BetterDispatcher.java  \
+				   BetterMainDispatcher.java  \
+				   RWorkers.java \
+				   PNGWorkers.java \
+				   CacheWorkers.java \
+				   MultiQ.java \
+				   Tester2.java
 
 
 default: classes

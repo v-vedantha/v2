@@ -1,3 +1,5 @@
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.zip.CRC32;
 import java.util.zip.Checksum;
 import java.lang.Object;
@@ -181,6 +183,12 @@ class Packet {
   final Header header;
   final Body body;
   final MessageType type;
+  AtomicInteger step = new AtomicInteger(0);
+  AtomicInteger sourcetsPNG = new AtomicInteger(0);
+  AtomicInteger destTsR = new AtomicInteger(0);
+  AtomicBoolean PNGallowed = new AtomicBoolean();
+  AtomicBoolean Rallowed = new AtomicBoolean();
+
   public Packet(Config config) {
     this.config = config;
     this.header = null;

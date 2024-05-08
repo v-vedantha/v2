@@ -3,7 +3,7 @@ public class PNGProcessor {
     public PNGProcessor(AllData data) {
         this.data = data;
     }
-    public boolean processCacheLookup(Header header, Integer[] outTs) { 
+    public boolean processPacket(Header header, Integer[] outTs) { 
         // First read the timestamps for the source and destinations
         Integer tsSource = this.data.ts.get(header.source % 256);
         outTs[0] = tsSource;
