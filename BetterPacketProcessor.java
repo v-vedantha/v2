@@ -50,15 +50,15 @@ public class BetterPacketProcessor extends PacketProcessor {
         // First empty out the cache
         // this.cache.invalidateSource(config.address);
         // this.cache.invalidateRange(config.addressBegin, config.addressEnd, config.address);
-        // lockSource(config.address); 
+        lockSource(config.address); 
         if (config.personaNonGrata) {
             this.PNG.add(config.address);
         } else {
             this.PNG.remove(config.address);
         }
-
+        
+        lockDest(config.address);
         // // Also lock the dest
-        // lockDest(config.address);
         // // So now we know that only one person can be updating the destination, so we can just use our classic operations
         // // Get the range
         Boolean[] isInQuad = {false};
@@ -93,8 +93,8 @@ public class BetterPacketProcessor extends PacketProcessor {
         //     }
         // }
 
-        // unlockDest(config.address);
-        // unlockSource(config.address);
+        unlockDest(config.address);
+        unlockSource(config.address);
     }
     public void processData(Header header, Body body) {
         Boolean[] isInCache = {false};
@@ -108,8 +108,8 @@ public class BetterPacketProcessor extends PacketProcessor {
         // }
         boolean result = false;
         try {
-            // lockSource(header.source);
-            // lockDest(header.dest);
+            lockSource(header.source);
+            lockDest(header.dest);
         // If your source is a persona non grata, drop the packet
         if (this.PNG.contains(header.source)) {
             return;
@@ -129,8 +129,8 @@ public class BetterPacketProcessor extends PacketProcessor {
         result = true;
         } finally {
             // cache.addElement(header.source, header.dest, result);
-            // unlockSource(header.source);
-            // unlockDest(header.dest);
+            unlockSource(header.source);
+            unlockDest(header.dest);
         }
     }
 }
