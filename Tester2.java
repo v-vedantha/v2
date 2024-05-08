@@ -123,7 +123,7 @@ public class Tester2 {
           dispatcherQs[i] = new MultiQ();
         }
         MultiQ[] CacheQs = new MultiQ[1];
-        for (int i = 0; i < numWorkers; i++) {
+        for (int i = 0; i < CacheQs.length; i++) {
           CacheQs[i] = new MultiQ();
         }
         MultiQ[] PNGQs = new MultiQ[numWorkers];
