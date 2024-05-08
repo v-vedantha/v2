@@ -60,13 +60,13 @@ public class BetterPacketProcessor extends PacketProcessor {
         // First empty out the cache
         // this.cache.invalidateSource(config.address);
         // this.cache.invalidateRange(config.addressBegin, config.addressEnd, config.address);
-        ts.set(config.address % 256, tsS.incrementAndGet());
         lockSource(config.address); 
         if (config.personaNonGrata) {
             this.PNG.add(config.address);
         } else {
             this.PNG.remove(config.address);
         }
+        ts.set(config.address % 256, tsS.incrementAndGet());
 
 
         
