@@ -50,14 +50,6 @@ public class QuadraticProbe {
             table.set(i, new Entry(null, 0));
         }
     }
-
-    public void acquire(Integer x, int offset) {
-        locks[Math.floorMod(x.hashCode() + offset * offset , locks.length)].readLock().lock();
-    }
-
-    public void release(Integer x, int offset) {
-        locks[Math.floorMod(x.hashCode() + offset * offset , locks.length)].readLock().unlock();
-    }
     public void baseAcquire(Integer x) {
         baselocks[Math.floorMod(x.hashCode() , baselocks.length)].readLock().lock();
     }
@@ -65,13 +57,6 @@ public class QuadraticProbe {
         baselocks[Math.floorMod(x.hashCode() , baselocks.length)].readLock().unlock();
     }
 
-    public void acquireW(Integer x, int offset) {
-        locks[Math.floorMod(x.hashCode() + offset * offset , locks.length)].writeLock().lock();
-    }
-
-    public void releaseW(Integer x, int offset) {
-        locks[Math.floorMod(x.hashCode() + offset * offset, locks.length)].writeLock().unlock();
-    }
     public void baseAcquireW(Integer x) {
         baselocks[Math.floorMod(x.hashCode() , baselocks.length)].writeLock().lock();
     }
