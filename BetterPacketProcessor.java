@@ -1,5 +1,8 @@
 import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicIntegerArray;
+import java.util.concurrent.atomic.AtomicReferenceArray;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class BetterPacketProcessor extends PacketProcessor {
@@ -16,6 +19,8 @@ public class BetterPacketProcessor extends PacketProcessor {
 
     // Map from dest -> source packets that can send to here
     QuadraticTable R;
+    AtomicIntegerArray ts;
+    AtomicInteger tsS;
     // Make a lock
     ReentrantLock lock = new ReentrantLock();
     BetterPacketProcessor(PacketGenerator gen) {
@@ -23,13 +28,18 @@ public class BetterPacketProcessor extends PacketProcessor {
         this.PNG = new QuadraticProbe(8);
         this.R = new QuadraticTable(32);
         this.hist = new ParallelHistogram();
-        this.cache = new Cache(256);
+        this.cache = new Cache(1024*32);
         this.srcLocks = new ReentrantLock[256];
         this.destLocks = new ReentrantLock[256];
         for (int i = 0; i < 256; i++) {
             this.srcLocks[i] = new ReentrantLock();
             this.destLocks[i] = new ReentrantLock();
         }
+        this.ts = new AtomicIntegerArray(256);
+        for (int i = 0; i < 256; i++) {
+            this.ts.set(i, 0);
+        }
+        tsS = new AtomicInteger(0);
     }
 
     void lockSource(Integer source) {
@@ -50,12 +60,15 @@ public class BetterPacketProcessor extends PacketProcessor {
         // First empty out the cache
         // this.cache.invalidateSource(config.address);
         // this.cache.invalidateRange(config.addressBegin, config.addressEnd, config.address);
+        ts.set(config.address % 256, tsS.incrementAndGet());
         lockSource(config.address); 
         if (config.personaNonGrata) {
             this.PNG.add(config.address);
         } else {
             this.PNG.remove(config.address);
         }
+
+
         
         lockDest(config.address);
         // // Also lock the dest
@@ -98,14 +111,17 @@ public class BetterPacketProcessor extends PacketProcessor {
     }
     public void processData(Header header, Body body) {
         Boolean[] isInCache = {false};
-        // boolean res = cache.lookup(header.source, header.dest, isInCache);
-        // if (isInCache[0]) {
-        //     if (res) {
-        //         this.hist.add(Fingerprint.getFingerprint(body.iterations,body.seed));
-        //     }
-        //     System.out.println("Cache hit");
-        //     return;
-        // }
+        CacheEntry res = cache.lookup(header.source, header.dest, isInCache);
+        if (isInCache[0]) {
+            System.out.println("Cache find");
+            if (res.ts >= ts.get(header.source % 256) && res.ts >= ts.get(header.dest % 256)) {
+                System.out.println("Cache hit");
+                if (res.isAllowed == true) {
+                    this.hist.add(Fingerprint.getFingerprint(body.iterations,body.seed));
+                }
+                return;
+            }
+        }
         boolean result = false;
         try {
             lockSource(header.source);
@@ -128,7 +144,7 @@ public class BetterPacketProcessor extends PacketProcessor {
         this.hist.add(Fingerprint.getFingerprint(body.iterations, body.seed));
         result = true;
         } finally {
-            // cache.addElement(header.source, header.dest, result);
+            cache.addElement(header.source, header.dest, result, tsS.get());
             unlockSource(header.source);
             unlockDest(header.dest);
         }
