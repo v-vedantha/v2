@@ -200,6 +200,7 @@ public class Tester2 {
            int oldsum = sum;
           if (r instanceof BetterDispatcher) {
             sum += ((BetterDispatcher) r).packetsProcessed; 
+            System.out.println("enq into cache " + ((BetterDispatcher) r).cachesenq);
           } else if (r instanceof CacheWorkers) {
             sum += ((CacheWorkers) r).packetsProcessed;
           } else if (r instanceof PNGWorkers) {

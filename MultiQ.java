@@ -1,15 +1,17 @@
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class MultiQ extends LamportQ{
-    ConcurrentLinkedQueue<Packet> queue;
+    BlockingQueue<Packet> queue;
 
     public MultiQ() {
         super(1024);
-        queue = new ConcurrentLinkedQueue<>();
+        queue = new LinkedBlockingQueue<>(1000);
 
     }
     public void enq(Packet x) throws FullException {
-        queue.add(x);
+        try { queue.add(x);} catch (IllegalStateException e) {throw new FullException();}
     }
 
     public Packet deq() throws EmptyException {

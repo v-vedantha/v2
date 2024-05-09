@@ -5,6 +5,7 @@ public class BetterDispatcher implements Runnable {
     AllData data;
     LamportQ[] cacheprocessors;
     public int packetsProcessed = 0;
+    public int cachesenq = 0;
 
     PaddedPrimitiveNonVolatile<Boolean> done;
     // We get dispatched to via the dispatcher and potentially some workers.
@@ -45,6 +46,7 @@ public class BetterDispatcher implements Runnable {
             while (!s && !done.value){
                 try {
                     cacheprocessors[realIdx].enq(pkt);
+                    cachesenq++;
                     s = true;
                 } catch (FullException e) {
                 }
